@@ -6,42 +6,48 @@ const Home = () => {
     const [info, setInfo] = useState('Clicked Box: (x, y)');
     const [highlightedPixel, setHighlightedPixel] = useState(null);
     const [showLeaderboard, setShowLeaderboard] = useState(false);
-    const [leaderboardData, setLeaderboardData] = useState({});
-    const overlayPositionRef = useRef({ top: 0, left: 0 }); // Use ref to track the canvas position
+    const [leaderboardData, setLeaderboardData] = useState([]);
+    const overlayPositionRef = useRef({ top: 0, left: 0 });
 
     const cols = 150;
     const rows = 80;
     const boxSize = 10;
 
-    const users = ['JATAYU000', 'Drone944', 'Evergreen'];
+    const [pixel_db, setPixelDB] = useState([]);
 
-    const generatePixelDB = () => {
-        const pixel_db = [];
-        let x = 0;
-        let y = 0;
-
-        while (y < rows) {
-            while (x < cols) {
-                const hexColor = '#ffffff';
-                const user = users[Math.floor(Math.random() * users.length)];
-                pixel_db.push({ x, y, hex: hexColor, user });
-                x++;
+    const fetchPixelData = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api/get_pixel');
+            const data = await response.json();
+            console.log(data);
+            if (data.success) {
+                const updatedPixels = data.pixels.map(pixel => ({
+                    x: pixel.X,
+                    y: pixel.Y,
+                    hex: pixel['hex-code'],
+                    user: pixel.user,
+                    updatedAt: pixel.updated_at,
+                }));
+                setPixelDB(updatedPixels);
+                console.log(updatedPixels);
             }
-            x = 0;
-            y++;
+        } catch (error) {
+            console.error('Error fetching pixel data:', error);
         }
-
-        return pixel_db;
     };
 
-    const [pixel_db, setPixelDB] = useState(generatePixelDB);
-
-    const calculateLeaderboardData = () => {
-        const userPixelCount = pixel_db.reduce((acc, pixel) => {
-            acc[pixel.user] = (acc[pixel.user] || 0) + 1;
-            return acc;
-        }, {});
-        setLeaderboardData(userPixelCount);
+    const fetchLeaderboardData = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:5000//api/get_user_details'); 
+            const data = await response.json();
+            console.log(data);
+            if (data.success) {
+                const sortedLeaderboard = data.user_data.sort((a, b) => b.score - a.score);
+                setLeaderboardData(sortedLeaderboard);
+            }
+        } catch (error) {
+            console.error('Error fetching leaderboard data:', error);
+        }
     };
 
     useEffect(() => {
@@ -54,10 +60,16 @@ const Home = () => {
 
             const drawGrid = (ctx) => {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                pixel_db.forEach(({ x, y, hex }) => {
-                    ctx.fillStyle = hex;
-                    ctx.fillRect(x * boxSize, y * boxSize, boxSize, boxSize);
-                });
+
+                for (let y = 0; y < rows; y++) {
+                    for (let x = 0; x < cols; x++) {
+                        const pixel = pixel_db.find(p => p.x === x && p.y === y);
+                        const fillColor = pixel ? pixel.hex : '#ffffff';
+
+                        ctx.fillStyle = fillColor;
+                        ctx.fillRect(x * boxSize, y * boxSize, boxSize, boxSize);
+                    }
+                }
 
                 if (highlightedPixel) {
                     const { x, y } = highlightedPixel;
@@ -83,17 +95,15 @@ const Home = () => {
                     const dx = event.clientX - startX;
                     const dy = event.clientY - startY;
 
-                    // Update overlay position visually without changing the state
                     overlayCanvas.style.top = `${overlayPositionRef.current.top + dy}px`;
                     overlayCanvas.style.left = `${overlayPositionRef.current.left + dx}px`;
                 }
             };
 
-            const handleMouseUp = (event) => {
+            const handleMouseUp = () => {
                 if (isDragging) {
                     isDragging = false;
 
-                    // Update the state with the final position after dragging
                     const newTop = parseFloat(overlayCanvas.style.top) || 0;
                     const newLeft = parseFloat(overlayCanvas.style.left) || 0;
 
@@ -138,15 +148,19 @@ const Home = () => {
         }
 
         calculateLeaderboardData();
-    }, [pixel_db, highlightedPixel]); // Removed overlayPosition dependency
+    }, [pixel_db, highlightedPixel]);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            calculateLeaderboardData();
-        }, 5000);
+        fetchPixelData(); 
+        fetchLeaderboardData(); // Fetch leaderboard data here
 
-        return () => clearInterval(interval);
-    }, [pixel_db]);
+        const interval = setInterval(() => {
+            fetchPixelData();
+            fetchLeaderboardData(); // Refetch leaderboard data at the same interval
+        }, 3000); 
+
+        return () => clearInterval(interval); 
+    }, []); 
 
     return (
         <div style={{ position: 'relative', width: '1200px', height: '600px' }}>
@@ -163,8 +177,8 @@ const Home = () => {
                 style={{
                     border: '1px solid black',
                     position: 'absolute',
-                    top: `${overlayPositionRef.current.top}px`, // Initial position from ref
-                    left: `${overlayPositionRef.current.left}px`, // Initial position from ref
+                    top: `${overlayPositionRef.current.top}px`, 
+                    left: `${overlayPositionRef.current.left}px`, 
                 }}
             />
             <div
@@ -218,9 +232,9 @@ const Home = () => {
                     width: '18vw',
                 }}>
                     <ul style={{ listStyleType: 'none', padding: '0' }}>
-                        {Object.entries(leaderboardData).map(([user, count]) => (
+                        {leaderboardData.map(({ user, score }) => (
                             <li key={user} style={{ margin: '0.5vh 0' }}>
-                                {user}: {count} pixels
+                                {user}: {score} pixels
                             </li>
                         ))}
                     </ul>
