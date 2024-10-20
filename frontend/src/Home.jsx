@@ -126,7 +126,7 @@ const Home = () => {
                     setHighlightedPixel({ x: clickedPixel.x, y: clickedPixel.y });
                 } else {
                     setInfo(`Clicked Box: (${x}, ${y})`);
-                    setHighlightedPixel(null);
+                    setHighlightedPixel({x: x,y: y});
                 }
 
                 drawGrid(overlayCtx);
