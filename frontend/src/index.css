@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Create an SVG-based cursor using the paintbrush emoji */
+/* Apply the rotated paintbrush emoji as a cursor */
+body {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="32" width="32"><text y="26" font-size="24" transform="rotate(80 16 16)">🖌️</text></svg>'), auto;
+    background-image: url('./icons/image.jpg'); /* Path to your background image */
+    background-size: cover; /* Ensures the image covers the entire area */
+    background-position: center; /* Centers the image */
+    background-repeat: repeat;
+  }
+  

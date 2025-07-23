@@ -79,7 +79,7 @@ jobs:
 
       - name: Pass the diff and file content to Python validation and send request
         run: |
-          python validate_pixel_update.py changes.txt changed_file_content.txt ${{ github.event.pull_request.user.login }} https://amplace.co/api/update_pixel
+          python validate_pixel_update.py changes.txt changed_file_content.txt ${{ github.event.pull_request.user.login }} https://amplacebackend.amfoss.in/api/update_pixel
 
   auto_merge_pr:
     needs: audit
