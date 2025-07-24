@@ -19,7 +19,6 @@ const Home = () => {
         try {
             const response = await fetch('https://amplacebackend.amfoss.in/api/get_pixel');
             const data = await response.json();
-            console.log(data);
             if (data.success) {
                 const updatedPixels = data.pixels.map(pixel => ({
                     x: pixel.X,
@@ -29,7 +28,6 @@ const Home = () => {
                     updatedAt: pixel.updated_at,
                 }));
                 setPixelDB(updatedPixels);
-                console.log(updatedPixels);
             }
         } catch (error) {
             console.error('Error fetching pixel data:', error);
@@ -40,7 +38,6 @@ const Home = () => {
         try {
             const response = await fetch('https://amplacebackend.amfoss.in/api/get_user_details');
             const data = await response.json();
-            console.log(data);
             if (data.success) {
                 const sortedLeaderboard = data.user_data.sort((a, b) => b.score - a.score);
                 setLeaderboardData(sortedLeaderboard);
@@ -49,6 +46,23 @@ const Home = () => {
             console.error('Error fetching leaderboard data:', error);
         }
     };
+
+    useEffect(() => {
+        // Center the canvas on initial load
+        const canvasWidth = 1500;
+        const canvasHeight = 800;
+        const centerLeft = (window.innerWidth - canvasWidth) / 2;
+        const centerTop = (window.innerHeight - canvasHeight) / 2;
+        overlayPositionRef.current = {
+            top: centerTop,
+            left: centerLeft,
+        };
+        const overlayCanvas = overlayCanvasRef.current;
+        if (overlayCanvas) {
+            overlayCanvas.style.top = `${centerTop}px`;
+            overlayCanvas.style.left = `${centerLeft}px`;
+        }
+    }, []);
 
     useEffect(() => {
         const mainCanvas = mainCanvasRef.current;
@@ -146,25 +160,22 @@ const Home = () => {
                 overlayCanvas.removeEventListener('click', handleClick);
             };
         }
-
-        calculateLeaderboardData();
     }, [pixel_db, highlightedPixel]);
 
     useEffect(() => {
         fetchPixelData();
-        fetchLeaderboardData(); // Fetch leaderboard data here
+        fetchLeaderboardData();
 
         const interval = setInterval(() => {
             fetchPixelData();
-            fetchLeaderboardData(); // Refetch leaderboard data at the same interval
+            fetchLeaderboardData();
         }, 3000);
 
         return () => clearInterval(interval);
     }, []);
 
     return (
-        <div style={{ position: 'relative', width: '1200px', height: '600px' }}>
-
+        <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
             <canvas
                 ref={mainCanvasRef}
                 width={1500}
@@ -261,8 +272,6 @@ const Home = () => {
                     Contribution Repo
                 </a>
             </div>
-
-
         </div>
     );
 };
