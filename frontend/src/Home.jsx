@@ -193,10 +193,12 @@ const Home = () => {
                     left: `${overlayPositionRef.current.left}px`,
                 }}
             />
+
+            {/* Clicked Box - top left */}
             <div
                 style={{
                     position: 'fixed',
-                    bottom: '1vh',
+                    top: '1vh',
                     left: '1vh',
                     background: 'rgba(0, 0, 0, 0.7)',
                     color: 'white',
@@ -204,54 +206,20 @@ const Home = () => {
                     fontSize: '2vh',
                     borderRadius: '0.5vw',
                     zIndex: 1000,
-                    width: '18vw',
+                    width: '15vw',
                     height: '5vh',
                     maxWidth: '850px',
                     minWidth: '20px',
                     boxSizing: 'border-box',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1vh',
                 }}
             >
-                <span>🖱️</span>{info}
+                <span>🖱️</span> {info}
             </div>
-            <div style={{
-                position: 'fixed',
-                top: '1vh',
-                left: '1vh',
-                background: 'rgba(0, 0, 0, 0.7)',
-                color: 'white',
-                padding: '1vh',
-                fontSize: '2vh',
-                borderRadius: '0.2vw',
-                zIndex: 1000,
-                cursor: 'pointer',
-                width: '18vw',
-            }} onClick={() => setShowLeaderboard(!showLeaderboard)}>
-                🏆  Leaderboard {showLeaderboard ? '▲' : '▼'}
-            </div>
-            {showLeaderboard && (
-                <div style={{
-                    position: 'fixed',
-                    top: '6vh',
-                    left: '1vh',
-                    background: 'rgba(0, 0, 0, 0.7)',
-                    color: 'white',
-                    padding: '1vh',
-                    fontSize: '2vh',
-                    borderRadius: '0.2vw',
-                    zIndex: 1000,
-                    maxHeight: '200px',
-                    overflowY: 'auto',
-                    width: '18vw',
-                }}>
-                    <ul style={{ listStyleType: 'none', padding: '0' }}>
-                        {leaderboardData.map(({ user, score }) => (
-                            <li key={user} style={{ margin: '0.5vh 0' }}>
-                                {user}: {score} pixels
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+
+            {/* Leaderboard toggle button - top right */}
             <div style={{
                 position: 'fixed',
                 top: '1vh',
@@ -263,9 +231,57 @@ const Home = () => {
                 borderRadius: '0.2vw',
                 zIndex: 1000,
                 cursor: 'pointer',
-                width: '18vw',
+                width: '15vw',
                 display: 'flex',
                 alignItems: 'center',
+                gap: '1vh',
+            }} onClick={() => setShowLeaderboard(!showLeaderboard)}>
+                🏆 Leaderboard {showLeaderboard ? '▲' : '▼'}
+            </div>
+
+            {/* Leaderboard data */}
+            {showLeaderboard && (
+                <div style={{
+                    position: 'fixed',
+                    top: '6vh',
+                    right: '1vh',
+                    background: 'rgba(0, 0, 0, 0.7)',
+                    color: 'white',
+                    padding: '1vh',
+                    fontSize: '2vh',
+                    borderRadius: '0.2vw',
+                    zIndex: 1000,
+                    maxHeight: '200px',
+                    overflowY: 'auto',
+                    width: '15vw',
+                }}>
+                    <ul style={{ listStyleType: 'none', padding: '0' }}>
+                        {leaderboardData.map(({ user, score }) => (
+                            <li key={user} style={{ margin: '0.5vh 0' }}>
+                            {   user}: {score} pixels
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+            {/* Contribution Repo - top center */}
+            <div style={{
+                position: 'fixed',
+                top: '1vh',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                background: 'rgba(0, 0, 0, 0.7)',
+                color: 'white',
+                padding: '1vh',
+                fontSize: '2vh',
+                borderRadius: '0.2vw',
+                zIndex: 1000,
+                cursor: 'pointer',
+                width: '15vw',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
             }}>
                 <a href='https://github.com/JATAYU000/amPlace_test' style={{ color: 'white', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
                     <img src='/github.png' alt='GitHub Logo' style={{ width: '1.8vw', height: '3vh', marginRight: '1vh' }} />
