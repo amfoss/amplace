@@ -48,7 +48,7 @@ const Home = () => {
     };
 
     useEffect(() => {
-        // Center the canvas on initial load
+        // Putting Canvas in the centre
         const canvasWidth = 1500;
         const canvasHeight = 800;
         const centerLeft = (window.innerWidth - canvasWidth) / 2;
@@ -174,7 +174,7 @@ const Home = () => {
         return () => clearInterval(interval);
     }, []);
 
-    return (
+       return (
         <div style={{ position: 'relative', width: '100vw', height: '100vh' }}>
             <canvas
                 ref={mainCanvasRef}
@@ -205,13 +205,13 @@ const Home = () => {
                     borderRadius: '0.5vw',
                     zIndex: 1000,
                     width: '18vw',
-                    height: '10vh',
+                    height: '5vh',
                     maxWidth: '850px',
                     minWidth: '20px',
                     boxSizing: 'border-box',
                 }}
             >
-                {info}
+                <span>🖱️</span>{info}
             </div>
             <div style={{
                 position: 'fixed',
@@ -226,7 +226,7 @@ const Home = () => {
                 cursor: 'pointer',
                 width: '18vw',
             }} onClick={() => setShowLeaderboard(!showLeaderboard)}>
-                Leaderboard {showLeaderboard ? '▲' : '▼'}
+                🏆  Leaderboard {showLeaderboard ? '▲' : '▼'}
             </div>
             {showLeaderboard && (
                 <div style={{
@@ -263,7 +263,7 @@ const Home = () => {
                 borderRadius: '0.2vw',
                 zIndex: 1000,
                 cursor: 'pointer',
-                width: '20vw',
+                width: '18vw',
                 display: 'flex',
                 alignItems: 'center',
             }}>
