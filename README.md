@@ -8,7 +8,7 @@ am/place is an interactive game inspired by [r/place](https://en.wikipedia.org/w
   {
     "x": "69",
     "y": "42",
-    "rgb": "#8008ff"
+    "rgb": "#ccff66"
   },
   {
     "x": "70",
