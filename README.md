@@ -38,7 +38,7 @@ Each entry in this json list corresponds to a singular pixel on the canvas. Ther
 2. The above prescribed format must be strictly followed.
 3. You're only allowed to modify 5 pixels at a time.
 
-Failure to follow any of the above rules will result in your PR getting disqualified, we have setup a Github action which accepts and rejects PR's automagically. You can try out this game at [PLACEHOLDER]
+Failure to follow any of the above rules will result in your PR getting disqualified, we have setup a Github action which accepts and rejects PR's automagically. You can try out this game at [amplace.amfoss.in](https://amplace.amfoss.in)
 
 ## 2024 Canvas:
 ![image](https://github.com/user-attachments/assets/e3cb0ab1-8a1f-41dc-b629-3b173ea829fc)
