@@ -1,5 +1,5 @@
 {
-  "editor.defaultColorDecorators": "auto",
+  "editor.defaultColorDecorators": true,
   "json.schemas": [
     {
       "fileMatch": ["/pixel_update.json"],
