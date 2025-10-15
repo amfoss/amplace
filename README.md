@@ -6,9 +6,9 @@ am/place is an interactive game inspired by [r/place](https://en.wikipedia.org/w
 ```json
 [
   {
-    "x": "69",
-    "y": "42",
-    "rgb": "#8008ff"
+    "x": "57",
+    "y": "23",
+    "rgb": "#27B7F5"
   },
   {
     "x": "70",
