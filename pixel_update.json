@@ -1,27 +1,46 @@
-[
-  {
-    "x": "69",
-    "y": "7",
-    "rgb": "#000000"
-  },
-  {
-    "x": "70",
-    "y": "7",
-    "rgb": "#222222"
-  },
-  {
-    "x": "71",
-    "y": "8",
-    "rgb": "#333333"
-  },
-  {
-    "x": "72",
-    "y": "9",
-    "rgb": "#444444"
-  },
-  {
-    "x": "68",
-    "y": "5",
-    "rgb": "#555555"
-  }
+GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
+REPO_OWNER = 'your_username'
+REPO_NAME = 'your_repo_name'
+PIXEL_ART_FILE = 'pixel_art.json'
+PIXELS_PER_PR = 5
+
+# Initialize Git and GitHub objects
+repo = Repo('.') # Assuming script is run in repo root
+g = Github(GITHUB_TOKEN)
+github_repo = g.get_user(REPO_OWNER).get_repo(REPO_NAME)
+
+def create_pull_request(pixels_chunk, pr_number):
+    branch_name = f"pixel-update-{pr_number}"
+    repo.git.checkout('-b', branch_name)
+
+    # Load existing pixel art, add new pixels, and save
+    with open(PIXEL_ART_FILE, 'r+') as f:
+        data = json.load(f)
+        data.extend(pixels_chunk)
+        f.seek(0)
+        json.dump(data, f, indent=4)
+        f.truncate()
+
+    repo.index.add([PIXEL_ART_FILE])
+    repo.index.commit(f"Add {len(pixels_chunk)} pixels for PR {pr_number}")
+    repo.remote().push(branch_name)
+
+    # Create pull request
+    title = f"Pixel Art Update - Part {pr_number}"
+    body = f"Adding {len(pixels_chunk)} pixels to the pixel art."
+    github_repo.create_pull(title=title, body=body, head=branch_name, base='main')
+
+    repo.git.checkout('main') # Switch back to main
+    repo.git.branch('-D', branch_name) # Delete local branch
+
+# Example pixel data (replace with your actual data)
+all_pixels = [
+    {'x': 0, 'y': 0, 'color': '#FF0000'},
+    {'x': 1, 'y': 0, 'color': '#00FF00'},
+    # ... many more pixels
 ]
+
+# Split pixels into chunks and create PRs
+for i in range(0, len(all_pixels), PIXELS_PER_PR):
+    pixel_chunk = all_pixels[i:i + PIXELS_PER_PR]
+    create_pull_request(pixel_chunk, (i // PIXELS_PER_PR) + 1)
