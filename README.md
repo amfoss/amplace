@@ -41,6 +41,7 @@ Each entry in this json list corresponds to a singular pixel on the canvas. Ther
 Failure to follow any of the above rules will result in your PR getting disqualified, we have setup a Github action which accepts and rejects PR's automagically. You can try out this game at [amplace.amfoss.in](https://amplace.amfoss.in)
 
 ## 2024 Canvas:
+2603 PRs were made by 200+ participants over the course of 5 days.
 ![image](https://github.com/user-attachments/assets/e3cb0ab1-8a1f-41dc-b629-3b173ea829fc)
 
 
