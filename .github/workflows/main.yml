@@ -108,10 +108,10 @@ jobs:
         run: gh pr edit $PR_NUMBER --base $PR_AUTHOR
 
       - name: Merge PR
-        run: gh pr merge $PR_NUMBER --merge --auto
+        run: gh pr merge $PR_NUMBER --merge --delete-branch --auto
 
       - name: Close PR if previous steps failed
         if: failure()
         run: |
-          echo "Previous steps failed. Closing PR #$PR_NUMBER"
-          gh pr close $PR_NUMBER --delete-branch
+          echo "Previous steps failed. Attempting to close PR #$PR_NUMBER"
+          gh pr close $PR_NUMBER -R amfoss/amplace -d || echo "PR already merged or not closable, ignoring."        
